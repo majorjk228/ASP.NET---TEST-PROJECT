@@ -1,0 +1,15 @@
+{
+  "houses": [
+    {
+      "ConsumerId": 1,
+      "Name": "Жилой дом 1",
+      "consumptions": [
+        {
+          "Date": "2019-01-01T00:00:00",
+          "Weather": -8.75,
+          "Consumption": 9845.272371
+        }
+      ]
+    }
+  ]
+}

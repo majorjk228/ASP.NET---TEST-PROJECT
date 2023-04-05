@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	@await Html.PartialAsync("MetaTagsPartial") @*// Подключаем метатеги*@
+	@await Html.PartialAsync("CssPartial")	    @*// Подключаем CSS*@
+</head>
+<body class="is-preload">
+	<div id="header">
+		@await Html.PartialAsync("HeaderPartial")	    @*// Подключаем Header*@
+	</div>
+	<div id="main">
+		@RenderBody()
+	</div>
+	<div id="footer">
+	<!-- Footer -->
+		@await Html.PartialAsync("FooterPartial")	    @*// Подключаем Footer*@
+	</div>
+	<!-- Scripts -->
+	@await Html.PartialAsync("ScriptsPartial")	    @*// Подключаем JS скрипты*@
+</body>
+</html>

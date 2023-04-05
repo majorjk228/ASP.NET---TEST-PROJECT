@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+    <section id="portfolio" class="two">
+        <div class="container">
+
+            <header>
+                    <h2>Добавить JSON</h2>
+            </header>
+        </div>
+        @model HouseViewModel
+
+     <div>
+        <h1>Добавить JSON</h1>
+        <div class="div-box">
+                @using (Html.BeginForm("UploadFile", "House", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div>     
+                        <label for="jsonFile">Выберите файл JSON:</label>     
+                        <input type="file" name="jsonFile" id="jsonFile" accept=".json" /> 
+                        </div> 
+                        <div>     
+                        <input type="submit" value="Отправить" /> </div>
+                    }
+        </div>
+    </div>
+    </section>
+}
