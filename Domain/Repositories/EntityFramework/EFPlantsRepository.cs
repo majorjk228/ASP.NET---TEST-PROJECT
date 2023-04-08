@@ -21,6 +21,11 @@ namespace TEST_TPLUS.Domain.Repositories.EntityFramework
             return context.Plants;
         }
 
+        public IQueryable<Plant> GetIncludePlant()                // все заводы + консумшены
+        {
+            return context.Plants.Include(o => o.Consumptions);
+        }
+
         public Plant GetPlantById(int id)
         {
             return context.Plants.FirstOrDefault(x => x.ConsumerId == id);

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using TEST_TPLUS.Domain.Entities;
 using TEST_TPLUS.Domains;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
@@ -19,34 +20,43 @@ namespace TEST_TPLUS.Controllers
             this.dataManager = dataManager;
             this.context = context;
         }
+       
+        public record Houses(string Name, double Weather, double Consumption);
 
         [HttpGet]
         public ActionResult Index()
         {
-            var resp = dataManager.Houses.GetIncludeHouse();
+            var response = dataManager.Houses.GetIncludeHouse();
 
-            /*var query = from house in context.Houses
-                        join cons in context.HouseConsumptions on house.ConsumerId equals cons.House into houseCons;
-                        //from hcons in houseCons.DefaultIfEmpty()
-                        group houseCons by new { house.Name, houseCons.Weather } into g
-                        select new
-                        {
-                            g.Key.Name,
-                            Weather = g.Key.Weather ?? "N/A",
-                            Consumption = g.Sum(x => x.Consumption)
-                        };*/
-       /*     var result = from house in context.Houses
-                         join houseCons in context.HouseConsumptions
-                            on house.ConsumerId equals houseCons.HouseConsumerId into houseConsGroup
-                         from houseConsumption in houseConsGroup.DefaultIfEmpty()
-                         select new
-                         {
-                             Name = house.Name,
-                             Weather = houseConsumption.Weather,
-                             Consumption = houseConsumption.Consumption
-                         };*/
+            // Выводим Дома, Сгруппированная Погода, Суммированное Потребление
+            var query = from house in context.Houses
+                       join cons in context.HouseConsumptions on house.ConsumerId equals cons.HouseConsumerId into houseCons
+                       from hcons in houseCons.DefaultIfEmpty()
+                       group hcons by new { house.Name, hcons.Weather } into g
+                       select new
+                       {
+                           g.Key.Name,
+                           Weather = g.Key.Weather,
+                           Consumption = g.Sum(x => x.Consumption)
+                       };
 
-            return View(resp);
+            List<Houses> houses = new List<Houses>();
+
+            var resp = query.ToList();            
+
+            foreach (var item in resp)
+            {
+                houses.Add(new Houses
+                (
+                    item.Name,
+                    item.Weather,
+                    item.Consumption
+                )
+                );
+            }
+
+
+            return View(response);
         }
 
         public ActionResult StandardBar()
@@ -55,9 +65,20 @@ namespace TEST_TPLUS.Controllers
         }
 
         [HttpGet("api/houses")]
-        public ActionResult GetById()
+        public ActionResult GetByApi()
         {
-            var resp = dataManager.Houses.GetHouse();
+            //var resp = dataManager.Houses.GetHouse();
+
+            var resp = from house in context.Houses
+                        join cons in context.HouseConsumptions on house.ConsumerId equals cons.HouseConsumerId into houseCons
+                        from hcons in houseCons.DefaultIfEmpty()
+                        group hcons by new { house.Name, hcons.Weather } into g
+                        select new
+                        {
+                            g.Key.Name,
+                            Weather = g.Key.Weather,
+                            Consumption = g.Sum(x => x.Consumption)
+                        };
 
             if (resp is null)
             {

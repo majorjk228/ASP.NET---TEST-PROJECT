@@ -34,8 +34,10 @@ namespace TEST_TPLUS.Domain.Entities
 
         [JsonProperty("Consumption")]
         public double Consumption { get; set; }
+        
+        [ForeignKey("ConsumerId")]
+        public int PlantConsumerId { get; set; }
 
-        [ForeignKey("PlantConsumerId")]
         public Plant? Plant { get; set; }
     }
 }

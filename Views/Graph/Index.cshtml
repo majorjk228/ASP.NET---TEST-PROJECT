@@ -1,24 +1,22 @@
 ﻿@model IQueryable<House>
+@*model List<Houses>*@
 @{
     ViewData["Title"] = "График";
 }
 
-   <h1>График</h1>
+   @*<h1>График</h1>
 
     <table class="table">
-             <tr><th>Имя</th><th>Возраст</th><th>KEK</th></tr>
+             <tr><th>Имя</th><th>Погода</th><th>Потребление</th></tr>
         @foreach (var item in Model)
         {
                 <tr>
-                    <td>@item.ConsumerId</td>
-                    <td>@item.Name</td>                            
-                    @foreach (var cons in item.Consumptions)
-                    {
-                        <td>@cons.Weather</td> 
-                    }
+                    <td>@item.Name</td>
+                    <td>@item</td>                            
+                    <td>@item</td>  
                 </tr>
         }
-    </table>
+    </table>*@
 
 
 <div class="text-center">
@@ -36,9 +34,13 @@
 
 <script>
     
-    var Houses = [];//these are all javascript variables
-    var Weather = [];
-    var Cons = [];
+    var Houses = [];    // Дома
+    
+    var Weather = [];   // Погода
+     
+    var Cons = [];      // Потребление
+
+    var Colors = ['#ff0000', '#660066', '#00b300', '#3333cc'];
 
     var dataset = [];
 
@@ -49,41 +51,73 @@
         {
             string house = item.Name.ToString();
             @:Houses.push("@Html.Raw(HttpUtility.JavaScriptStringEncode(house))"); 
-            
-            foreach (var cons in item.Consumptions)
+            string cosumption = "";
+            @foreach (var cons in item.Consumptions)
             {
-                @:Weather.push(@cons.Weather)       
-                @:Cons.push(@cons.Consumption)    
-            }
-            
-            @:dataset.push({label: Houses[@i], backgroundColor: 'transparent',borderColor: "#ff0000",borderWidth: 2,pointBorderColor: false,startAngle: 0, data: [-2125, -1592, 3205, 4102, -2585, 4265] , fill: false, lineTension: .4, showLine: true});
+                cosumption = cons.Consumption.ToString();
+                @:Weather.push(@cons.Weather.ToString()); 
+                @:Cons.push(@cons.Consumption);                 
+            }    
+            @:dataset.push({label: "@Html.Raw(HttpUtility.JavaScriptStringEncode(house))", backgroundColor: 'transparent', borderColor: Colors[@i], borderWidth: 2, pointBorderColor: false,startAngle: 0, data: "@Html.Raw(HttpUtility.JavaScriptStringEncode(cosumption))" , fill: false, lineTension: .4, showLine: true});
+            //@:dataset.push({label: Houses[@i], backgroundColor: 'transparent', borderColor: "#ff0000", borderWidth: 2, pointBorderColor: false,startAngle: 0, data: [1,-2,3] , fill: false, lineTension: .4, showLine: true});
             i++;
         }
     }
-
-
+        var arr = (Array.from(new Set(Weather))) // Группируем погоду
+              
         var Chart2 = document.getElementById('myChart2').getContext('2d');
         var chart = new Chart(Chart2, {
             type: 'line',
             data: {
-                //labels: ["John", "Mary", "Asha", "Emily","Bonnie"], //x axis labels
-                labels: Weather.sort(), //x axis labels
-                datasets: dataset
-
-                /*datasets: [
-                    {
-                        label: House ,
-                    backgroundColor: 'transparent',
-                    borderColor: "#ff0000",
-                    borderWidth: 2,
-                    pointBorderColor: false,
-                    startAngle: 0,
-                    //data: Weather,
-                    data: [-2125, -1592, 3205, 4102, -2585, 4265],
-                    fill: false,
-                    lineTension: .4,
-                    showLine: true,
-                    }]*/
+                labels: arr.sort(), //x axis labels
+                //datasets: response.data.lines.map(data => ({ конфиг }))
+                datasets: dataset               
+               /* datasets: [{
+                label: Houses[0],
+                backgroundColor: 'transparent',
+                borderColor: "#ff0000",
+                borderWidth: 2,
+                pointBorderColor: false,
+                startAngle: 0,
+                data: [1,-2, 3],
+                fill: false,
+                lineTension: .4,
+                showLine: true,
+            }, {
+                label: Houses[1],
+                fill: false,
+                lineTension: .4,
+                startAngle: 0,
+                data: [1,-2, 3, 5, 6],
+                backgroundColor: "transparent",
+                pointBorderColor: "#660066",
+                borderColor: '#660066',
+                borderWidth: 2,
+                showLine: true,
+            }, {
+                label: Houses[2],
+                fill: false,
+                lineTension: .4,
+                startAngle: 0,
+                data: [1,-2, 3, 5, 6, 7, 10],
+                backgroundColor: "transparent",
+                pointBorderColor: "#00b300",
+                borderColor: '#00b300',
+                borderWidth: 2,
+                showLine: true,
+            },
+            {
+                label: Houses[3],
+                fill: false,
+                lineTension: .4,
+                startAngle: 0,
+                data: [1,-2, 3, 5, 6, 7, 12],
+                backgroundColor: "transparent",
+                pointBorderColor: "#3333cc",
+                borderColor: '#3333cc',
+                borderWidth: 2,
+                showLine: true,
+            }]*/
             },
             // Configuration options
             options: {

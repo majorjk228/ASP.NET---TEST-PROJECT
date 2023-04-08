@@ -11,6 +11,7 @@ namespace TEST_TPLUS.Domain.Entities
         public List<House> Houses { get; set; }
     }
 
+    //[Table("Houses")]
     public class House : EntityBase
     {
         // Ссылка на Consumption
@@ -36,6 +37,8 @@ namespace TEST_TPLUS.Domain.Entities
         public double Consumption { get; set; }
 
         [ForeignKey("ConsumerId")]
+        public int HouseConsumerId { get; set; }
+   
         public House? House { get; set; }
     }
 }
