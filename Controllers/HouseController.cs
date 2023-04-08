@@ -44,22 +44,31 @@ namespace TEST_TPLUS.Controllers
                     var jsonString = reader.ReadToEnd();
                     var jsonObject = JObject.Parse(jsonString);
 
-                    HRoot myDeserializedClass = JsonConvert.DeserializeObject<HRoot>(jsonString);
-
                     var map = new MappingProfile();
 
-                    foreach (var item in map.GetHouse(myDeserializedClass.houses))
+                    HRoot? houser = JsonConvert.DeserializeObject<HRoot>(jsonString);     
+                    
+                    // Сейвим в БД все, что связано с домами
+                    foreach (var item in map.GetHouse(houser.Houses))
                     {
                         dataManager.Houses.SaveHouse(item);
                     }
-                                      
+
+                    PRoot? plantser = JsonConvert.DeserializeObject<PRoot>(jsonString);
+
+                    // Сейвим в БД все, что связано с заводами
+                    foreach (var item in map.GetPlant(plantser.Plants))
+                    {
+                        dataManager.Plants.SavePlant(item);
+                    }
+
                     return Ok("Файл успешно обработан \n" + jsonObject);
                 }
             }
             else
             {
                 ModelState.AddModelError("jsonFile", "Выберите файл JSON для загрузки");
-                //return Error("Фaйл не выбран");            
+                //return Error("Фaйл не выбран");    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });     
                 return View("Index");
             }
         }
@@ -73,75 +82,6 @@ namespace TEST_TPLUS.Controllers
             // Имя файла - необязательно
             string file_name = "test.json";
             return PhysicalFile(file_path, file_type, file_name);
-        }
-
-        // GET: HouseController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: HouseController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: HouseController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: HouseController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: HouseController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: HouseController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: HouseController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

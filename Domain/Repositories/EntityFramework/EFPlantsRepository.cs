@@ -28,11 +28,8 @@ namespace TEST_TPLUS.Domain.Repositories.EntityFramework
 
         public void SavePlant(Plant entity)
         {
-            if (entity.ConsumerId == default)
-                context.Entry(entity).State = EntityState.Added;
-            else
-                context.Entry(entity).State = EntityState.Modified;
-            context.SaveChanges();
+            context.Plants.Add(entity);
+            context.SaveChanges();            
         }
 
         public void DeletePlant(int id)

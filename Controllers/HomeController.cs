@@ -10,7 +10,7 @@ namespace TEST_TPLUS.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-		private readonly DataManager dataManager; // Для того, чтобы иметь доступ к базе данных
+		private readonly DataManager dataManager; 
 
 		public HomeController(ILogger<HomeController> logger, DataManager dataManager)
         {

@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
 using TEST_TPLUS.Domain.Entities;
 using TEST_TPLUS.Domains;
 using TEST_TPLUS.Domains.Repositories.Abstract;
+using static System.Web.Razor.Parser.SyntaxConstants;
 
 
 // Реализация методов, объявленных в интефрейсе
@@ -16,17 +19,22 @@ namespace TEST_TPLUS.Domain.Repositories.EntityFramework
             this.context = context;            
         }
 
-        public IQueryable<House> GetHouse()                         // все записи из таблицы
+        public List<House> GetHouse()                               // все записи из таблицы
         {
-            return context.Houses;
+            return context.Houses.ToList();
         }
 
-        public House GetHouseById(int id)                           // первая запись из таблицы
+        public IQueryable<House> GetIncludeHouse()                // все дома + консумшены
+        {
+            return context.Houses.Include(o => o.Consumptions);
+        }
+
+        public House GetHouseById(int id)                           // конкретного по айди
         {
             return context.Houses.FirstOrDefault(x => x.ConsumerId == id);
         }
 
-        public House GetHouseByName(string name)                    // по ключевому полю из таблицы
+        public House GetHouseByName(string name)                    // по наименованию
         {
             return context.Houses.FirstOrDefault(x => x.Name == name);
         }

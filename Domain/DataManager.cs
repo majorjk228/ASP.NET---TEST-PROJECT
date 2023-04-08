@@ -8,12 +8,12 @@ namespace TEST_TPLUS.Domains
     public class DataManager
     {
         public IHousesRepository Houses { get; set; }
-        public IPlantsRepository Factories { get; set; }
+        public IPlantsRepository Plants { get; set; }
 
         public DataManager(IHousesRepository housesRepository, IPlantsRepository factoriesRepository)
         {
             Houses = housesRepository;
-            Factories = factoriesRepository;
+            Plants = factoriesRepository;
         }
     }
 }

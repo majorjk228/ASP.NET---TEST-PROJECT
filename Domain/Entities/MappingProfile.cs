@@ -2,6 +2,7 @@
 
 namespace TEST_TPLUS.Domain.Entities
 {
+    // Класс для орбаботки классов, после десериализации JSON
     public class MappingProfile
     {
         public List<House> GetHouse(List<House> houses)
@@ -14,7 +15,7 @@ namespace TEST_TPLUS.Domain.Entities
                 {
                     Name = item.Name,
                     UserName = "Alex",
-                    Consumptions = GetCons(item.Consumptions)
+                    Consumptions = GetHCons(item.Consumptions)
                 }
                 );
             }
@@ -22,7 +23,7 @@ namespace TEST_TPLUS.Domain.Entities
             return list;
         }
 
-        public List<HouseConsumption> GetCons(IReadOnlyCollection<HouseConsumption> Consumptions)
+        public List<HouseConsumption> GetHCons(IReadOnlyCollection<HouseConsumption> Consumptions)
         {
             var list = new List<HouseConsumption>();
 
@@ -30,8 +31,43 @@ namespace TEST_TPLUS.Domain.Entities
             {
                 list.Add(new HouseConsumption
                 {
-                    Weather = 17,
-                    Consumption = 10
+                    Weather = item.Weather,
+                    Consumption = item.Consumption
+                }
+                );
+            }
+
+            return list;
+        }
+
+        public List<Plant> GetPlant(List<Plant> plants)
+        {
+            var list = new List<Plant>();
+
+            foreach (var item in plants)
+            {
+                list.Add(new Plant
+                {
+                    Name = item.Name,
+                    UserName = "Alex",
+                    Consumptions = GetPCons(item.Consumptions)
+                }
+                );
+            }
+
+            return list;
+        }
+
+        public List<PlantConsumption> GetPCons(IReadOnlyCollection<PlantConsumption> Consumptions)
+        {
+            var list = new List<PlantConsumption>();
+
+            foreach (var item in Consumptions)
+            {
+                list.Add(new PlantConsumption
+                {
+                    Price = item.Price,
+                    Consumption = item.Consumption
                 }
                 );
             }
