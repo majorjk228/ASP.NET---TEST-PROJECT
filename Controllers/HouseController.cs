@@ -43,7 +43,7 @@ namespace TEST_TPLUS.Controllers
                     var jsonString = reader.ReadToEnd();
                     var jsonObject = JObject.Parse(jsonString);
 
-                    var map = new MappingProfile();
+                    var map = new MappingProfile(); // Класс, для маппинга объектов пришедших с JSON
 
                     HRoot? houser = JsonConvert.DeserializeObject<HRoot>(jsonString);     
                     
