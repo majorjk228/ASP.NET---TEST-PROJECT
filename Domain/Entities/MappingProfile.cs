@@ -9,12 +9,12 @@ namespace TEST_TPLUS.Domain.Entities
     // Класс для орбаботки классов, после десериализации JSON
     public class MappingProfile
     {
-        string Username { get; set; }
+        string Username { get; set; } // Виндовое имя пользователя
 
         public List<House> GetHouse(List<House> houses)
         {
             WindowsIdentity currentUser = WindowsIdentity.GetCurrent();
-            Username = currentUser.Name; // Виндовое имя пользователя
+            Username = currentUser.Name;
 
             var list = new List<House>();
 
