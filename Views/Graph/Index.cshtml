@@ -1,22 +1,8 @@
-﻿@model IQueryable<House>
-@*model List<Houses>*@
+﻿@*model IQueryable<House>*@
+@model List<Houses>
 @{
     ViewData["Title"] = "График";
 }
-
-   @*<h1>График</h1>
-
-    <table class="table">
-             <tr><th>Имя</th><th>Погода</th><th>Потребление</th></tr>
-        @foreach (var item in Model)
-        {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>@item</td>                            
-                    <td>@item</td>  
-                </tr>
-        }
-    </table>*@
 
 
 <div class="text-center">
@@ -28,243 +14,98 @@
             </div>
         </div>
     </div>
-    <h3><a href="~/Home/Index">Back</a></h3>
 </div>
 
+
+
+<div class="text-center">
+    <h4 class="display-4">График потребления заводов</h4>
+    <div class="card">
+        <div class="card-header">
+            <div class="chart1">
+                <canvas id="myChart3"></canvas>
+            </div>
+        </div>
+    </div>
+    <h3><a href="~/Home/Index">Back</a></h3>
+</div>
 
 <script>
     
     var Houses = [];    // Дома
     
-    var Weather = [];   // Погода
-     
-    var Cons = [];      // Потребление
+    var Weather = [];   // Погода        
 
     var Colors = ['#ff0000', '#660066', '#00b300', '#3333cc'];
 
     var dataset = [];
+       
 
     @if (Model.ToList().Count > 0)
     {
-        int i = 0;
+        int j = 0;
         foreach (var item in Model)
         {
-            string house = item.Name.ToString();
-            @:Houses.push("@Html.Raw(HttpUtility.JavaScriptStringEncode(house))"); 
-            string cosumption = "";
-            @foreach (var cons in item.Consumptions)
-            {
-                cosumption = cons.Consumption.ToString();
-                @:Weather.push(@cons.Weather.ToString()); 
-                @:Cons.push(@cons.Consumption);                 
-            }    
-            @:dataset.push({label: "@Html.Raw(HttpUtility.JavaScriptStringEncode(house))", backgroundColor: 'transparent', borderColor: Colors[@i], borderWidth: 2, pointBorderColor: false,startAngle: 0, data: "@Html.Raw(HttpUtility.JavaScriptStringEncode(cosumption))" , fill: false, lineTension: .4, showLine: true});
-            //@:dataset.push({label: Houses[@i], backgroundColor: 'transparent', borderColor: "#ff0000", borderWidth: 2, pointBorderColor: false,startAngle: 0, data: [1,-2,3] , fill: false, lineTension: .4, showLine: true});
-            i++;
+            @:var Cons = []; // потребление
+
+            for (int i = 0; i < item.Consumption.Count; i++)
+            {               
+                @:Cons.push(@Convert.ToInt32(item.Consumption[i])); 
+            }
+
+            @:dataset.push({label: "@Html.Raw(HttpUtility.JavaScriptStringEncode(item.Name.ToString()))", backgroundColor: 'transparent', borderColor: Colors[@j], borderWidth: 2, pointBorderColor: false,startAngle: 0, data: Cons, fill: false, lineTension: .4, showLine: true});
+            j++;
         }
     }
         var arr = (Array.from(new Set(Weather))) // Группируем погоду
+        
+        fetch('https://localhost:7296/api/weather')
+        .then(response => response.json()).then(data => {
+        data.forEach(weather => {
+            Weather.push(weather)  
+            //console.log(weather)    
+              })
+        
+        var Chart2 = document.getElementById('myChart2').getContext('2d');
+        var chart = new Chart(Chart2, {
+            type: 'line',
+            data: {
+               labels: Weather,
+               datasets: dataset               
+            },
+            // Configuration options
+            options: {
+                title: {
+                    display: true,
+                    text: "График потребления домов"
+                }
+            }
+        });
+      })
+
+
+              fetch('https://localhost:7296/api/weather')
+        .then(response => response.json()).then(data => {
+        data.forEach(weather => {
+            console.log(weather)    
+              })
+         })
+
+       var Chart3 = document.getElementById('myChart3').getContext('2d');
+        var chart = new Chart(Chart3, {
+            type: 'line',
+            data: {
+               labels: Weather,
+               datasets: dataset               
+            },
+            // Configuration options
+            options: {
+                title: {
+                    display: true,
+                    text: "График потребления заводов"
+                }
+            }
+        });
               
-        var Chart2 = document.getElementById('myChart2').getContext('2d');
-        var chart = new Chart(Chart2, {
-            type: 'line',
-            data: {
-                labels: arr.sort(), //x axis labels
-                //datasets: response.data.lines.map(data => ({ конфиг }))
-                datasets: dataset               
-               /* datasets: [{
-                label: Houses[0],
-                backgroundColor: 'transparent',
-                borderColor: "#ff0000",
-                borderWidth: 2,
-                pointBorderColor: false,
-                startAngle: 0,
-                data: [1,-2, 3],
-                fill: false,
-                lineTension: .4,
-                showLine: true,
-            }, {
-                label: Houses[1],
-                fill: false,
-                lineTension: .4,
-                startAngle: 0,
-                data: [1,-2, 3, 5, 6],
-                backgroundColor: "transparent",
-                pointBorderColor: "#660066",
-                borderColor: '#660066',
-                borderWidth: 2,
-                showLine: true,
-            }, {
-                label: Houses[2],
-                fill: false,
-                lineTension: .4,
-                startAngle: 0,
-                data: [1,-2, 3, 5, 6, 7, 10],
-                backgroundColor: "transparent",
-                pointBorderColor: "#00b300",
-                borderColor: '#00b300',
-                borderWidth: 2,
-                showLine: true,
-            },
-            {
-                label: Houses[3],
-                fill: false,
-                lineTension: .4,
-                startAngle: 0,
-                data: [1,-2, 3, 5, 6, 7, 12],
-                backgroundColor: "transparent",
-                pointBorderColor: "#3333cc",
-                borderColor: '#3333cc',
-                borderWidth: 2,
-                showLine: true,
-            }]*/
-            },
-            // Configuration options
-            options: {
-                title: {
-                    display: true,
-                    text: "График потребления домов"
-                }
-            }
-        });
 </script>
-
-    
-    @*foreach (var item in Model)
-    {                
-        @:Houses.push('@item.Name');
-        @foreach (var cons in item.Consumptions)
-        {
-            @:Weather.push('cons.Weather')
-        }                 
-    }
-
-            //var Physics = [];   //these are all javascript variables
-        var House = [];
-        var Weather = [];
-        @foreach (var item in Model)
-        {                
-            @:Houses.push('@item.Name');
-            @foreach (var cons in item.Consumptions)
-            {
-                @:Weather.push('cons.Weather')
-            }                 
-        }
-
-                var House = [];
-        var Weather = [];
-        @foreach (var item in Model)
-        {                
-            @:Houses.push('@item.Name');
-            @foreach (var cons in item.Consumptions)
-            {
-                @:Weather.push('cons.Weather')
-            }                 
-        }
-
-        Weather.push('15')
-        Weather.push('16')
-    
-   
-
-    <div class="text-center">
-        <h4 class="display-4">Потребность домов</h4>
-        <h3><a href="~/Home/Index">Назад</a></h3>
-        <div class="card">
-            <div class="card-header">
-                <div class="chart1">
-                    <canvas id="myChart2"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-
-    <script>                                           
-
-
-        var House = [];
-        var Weather = [];
-        var Cons = [];
-
-        var dataset = [];
-
-
-            /*fetch('https://localhost:7296/api/houses')
-            .then(response => response.json()).then(data => {
-            data.forEach(house => {
-                  //console.log(house.Name)
-                  //House.push(house.Name)
-                  })
-            })*/
-
-       
-
-        //House.forEach(element => console.log(element));
-
-        @*if (Model.ToList().Count > 0)
-        {
-            foreach (var item in Model)
-            {   
-                @:console.log('@item.Name');
-                @:House.push('@item.Name.ToString()');     
-                //@:House.push('@item');     
-                @*foreach (var cons in item.Consumptions)
-                {
-                    @:Weather.push('@cons.Weather')       
-                    @:Cons.push('@cons.Consumption')    
-                }  
-            }
-            }            
-
-            @if (Model.ToList().Count > 0)
-            {
-                foreach (var item in Model)
-                {
-                    @:House.push(@item.Name); 
-                    @:console.log(@item.Name);
-                    foreach (var cons in item.Consumptions)
-                    {
-                        @:Weather.push(@cons.Weather)       
-                        @:Cons.push(@cons.Consumption)    
-                    } 
-
-                        @:dataset.push({label: "House", backgroundColor: 'transparent',borderColor: "#ff0000",borderWidth: 2,pointBorderColor: false,startAngle: 0, data: [-2125, -1592, 3205, 4102, -2585, 4265] , fill: false, lineTension: .4, showLine: true});
-                }
-            }
-
-
-        var Chart2 = document.getElementById('myChart2').getContext('2d');
-        var chart = new Chart(Chart2, {
-            type: 'line',
-            data: {
-                //labels: ["John", "Mary", "Asha", "Emily","Bonnie"], //x axis labels
-                labels: Weather, //x axis labels
-                datasets: dataset
-                        
-                /*datasets: [
-                    {
-                        label: House ,
-                    backgroundColor: 'transparent',
-                    borderColor: "#ff0000",
-                    borderWidth: 2,
-                    pointBorderColor: false,
-                    startAngle: 0,
-                    //data: Weather,
-                    data: [-2125, -1592, 3205, 4102, -2585, 4265],
-                    fill: false,
-                    lineTension: .4,
-                    showLine: true,
-                    }]*/
-            },
-            // Configuration options
-            options: {
-                title: {
-                    display: true,
-                    text: "График потребления домов"
-                }
-            }
-        });
-    </script>*@
 
