@@ -22,12 +22,9 @@ namespace TEST_TPLUS.Controllers
     {
         private readonly DataManager dataManager; // Для того, чтобы иметь доступ к базе данных
 
-        private readonly AppDbContext context;
-
-        public HouseController(DataManager dataManager, AppDbContext context)
+        public HouseController(DataManager dataManager)
         {
             this.dataManager = dataManager;
-            this.context = context;
         }
 
         // GET: HouseController
@@ -63,7 +60,7 @@ namespace TEST_TPLUS.Controllers
                     {
                         dataManager.Plants.SavePlant(item);
                     }
-
+                   
                     return Ok("Файл успешно обработан \n" + jsonObject);
                 }
             }

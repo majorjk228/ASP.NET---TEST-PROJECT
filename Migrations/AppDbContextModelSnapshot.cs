@@ -105,7 +105,7 @@ namespace TEST_TPLUS.Migrations
                     b.Property<DateTime>("DateCreate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PlantConsumerId")
+                    b.Property<int>("PlantConsumerId")
                         .HasColumnType("int");
 
                     b.Property<double>("Price")
@@ -115,7 +115,7 @@ namespace TEST_TPLUS.Migrations
 
                     b.HasIndex("PlantConsumerId");
 
-                    b.ToTable("PlantConsumption");
+                    b.ToTable("PlantConsumptions");
                 });
 
             modelBuilder.Entity("TEST_TPLUS.Domain.Entities.HouseConsumption", b =>
@@ -133,7 +133,9 @@ namespace TEST_TPLUS.Migrations
                 {
                     b.HasOne("TEST_TPLUS.Domain.Entities.Plant", "Plant")
                         .WithMany("Consumptions")
-                        .HasForeignKey("PlantConsumerId");
+                        .HasForeignKey("PlantConsumerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Plant");
                 });

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using TEST_TPLUS.Domain.Entities;
 
 
@@ -18,6 +17,8 @@ namespace TEST_TPLUS.Domains
         public virtual DbSet<HouseConsumption> HouseConsumptions { get; set; }
 
         public virtual DbSet<Plant> Plants { get; set; }
+
+        public virtual DbSet<PlantConsumption> PlantConsumptions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

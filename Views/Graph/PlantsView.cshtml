@@ -1,0 +1,72 @@
+﻿@model List<Plants>
+@{
+    ViewData["Title"] = "График заводов";
+}
+
+
+<div class="text-center">
+    <h4 class="display-4">График потребления заводов</h4>
+    <div class="card">
+        <div class="card-header">
+            <div class="chart1">
+                <canvas id="myChart2"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+
+    var Plants = [];    // Дома
+
+    var Price = [];   // Погода        
+
+    var Colors = ['#ff0000', '#660066', '#00b300', '#3333cc'];
+
+    var dataset = [];
+
+
+    @if (Model.ToList().Count > 0)
+    {
+        int j = 0;
+        foreach (var item in Model)
+        {
+            @:var Cons = []; // потребление
+
+            for (int i = 0; i < item.Consumption.Count; i++)
+            {               
+                @:Cons.push(@Convert.ToInt32(item.Consumption[i])); 
+            }
+
+            @:dataset.push({label: "@Html.Raw(HttpUtility.JavaScriptStringEncode(item.Name.ToString()))", backgroundColor: 'transparent', borderColor: Colors[@j], borderWidth: 2, pointBorderColor: false,startAngle: 0, data: Cons, fill: false, lineTension: .4, showLine: true});
+            j++;
+        }
+    }
+
+        fetch('https://localhost:7296/api/price')
+        .then(response => response.json()).then(data => {
+        data.forEach(price => {
+            Price.push(price)  
+            })
+
+        var Chart2 = document.getElementById('myChart2').getContext('2d');
+        var chart = new Chart(Chart2, {
+            type: 'line',
+            data: {
+               labels: Price,
+               datasets: dataset               
+            },
+            // Configuration options
+            options: {
+                title: {
+                    display: true,
+                    text: "График потребления заводов"
+                }
+            }
+        });
+      })
+
+</script>

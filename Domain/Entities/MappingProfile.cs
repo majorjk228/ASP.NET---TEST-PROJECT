@@ -1,12 +1,21 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System.Security.Principal;
+using TEST_TPLUS.Domains;
 
 namespace TEST_TPLUS.Domain.Entities
 {
     // Класс для орбаботки классов, после десериализации JSON
     public class MappingProfile
     {
+        string Username { get; set; }
+
         public List<House> GetHouse(List<House> houses)
         {
+            WindowsIdentity currentUser = WindowsIdentity.GetCurrent();
+            Username = currentUser.Name; // Виндовое имя пользователя
+
             var list = new List<House>();
 
             foreach (var item in houses)
@@ -14,7 +23,7 @@ namespace TEST_TPLUS.Domain.Entities
                 list.Add(new House
                 {
                     Name = item.Name,
-                    UserName = "Alex",
+                    UserName = Username,
                     Consumptions = GetHCons(item.Consumptions)
                 }
                 );
@@ -49,7 +58,7 @@ namespace TEST_TPLUS.Domain.Entities
                 list.Add(new Plant
                 {
                     Name = item.Name,
-                    UserName = "Alex",
+                    UserName = Username,
                     Consumptions = GetPCons(item.Consumptions)
                 }
                 );

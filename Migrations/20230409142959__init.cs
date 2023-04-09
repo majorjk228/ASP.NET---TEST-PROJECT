@@ -60,7 +60,7 @@ namespace TEST_TPLUS.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PlantConsumption",
+                name: "PlantConsumptions",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -68,16 +68,17 @@ namespace TEST_TPLUS.Migrations
                     DateCreate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     Consumption = table.Column<double>(type: "float", nullable: false),
-                    PlantConsumerId = table.Column<int>(type: "int", nullable: true)
+                    PlantConsumerId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PlantConsumption", x => x.Id);
+                    table.PrimaryKey("PK_PlantConsumptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PlantConsumption_Plants_PlantConsumerId",
+                        name: "FK_PlantConsumptions_Plants_PlantConsumerId",
                         column: x => x.PlantConsumerId,
                         principalTable: "Plants",
-                        principalColumn: "ConsumerId");
+                        principalColumn: "ConsumerId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -86,8 +87,8 @@ namespace TEST_TPLUS.Migrations
                 column: "HouseConsumerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PlantConsumption_PlantConsumerId",
-                table: "PlantConsumption",
+                name: "IX_PlantConsumptions_PlantConsumerId",
+                table: "PlantConsumptions",
                 column: "PlantConsumerId");
         }
 
@@ -97,7 +98,7 @@ namespace TEST_TPLUS.Migrations
                 name: "HouseConsumptions");
 
             migrationBuilder.DropTable(
-                name: "PlantConsumption");
+                name: "PlantConsumptions");
 
             migrationBuilder.DropTable(
                 name: "Houses");

@@ -12,7 +12,7 @@ using TEST_TPLUS.Domains;
 namespace TEST_TPLUS.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230408124240__init")]
+    [Migration("20230409142959__init")]
     partial class _init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,7 +107,7 @@ namespace TEST_TPLUS.Migrations
                     b.Property<DateTime>("DateCreate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PlantConsumerId")
+                    b.Property<int>("PlantConsumerId")
                         .HasColumnType("int");
 
                     b.Property<double>("Price")
@@ -117,7 +117,7 @@ namespace TEST_TPLUS.Migrations
 
                     b.HasIndex("PlantConsumerId");
 
-                    b.ToTable("PlantConsumption");
+                    b.ToTable("PlantConsumptions");
                 });
 
             modelBuilder.Entity("TEST_TPLUS.Domain.Entities.HouseConsumption", b =>
@@ -135,7 +135,9 @@ namespace TEST_TPLUS.Migrations
                 {
                     b.HasOne("TEST_TPLUS.Domain.Entities.Plant", "Plant")
                         .WithMany("Consumptions")
-                        .HasForeignKey("PlantConsumerId");
+                        .HasForeignKey("PlantConsumerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Plant");
                 });

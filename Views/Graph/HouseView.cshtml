@@ -1,7 +1,6 @@
-﻿@*model IQueryable<House>*@
-@model List<Houses>
+﻿@model List<Houses>
 @{
-    ViewData["Title"] = "График";
+    ViewData["Title"] = "График домов";
 }
 
 
@@ -18,28 +17,16 @@
 
 
 
-<div class="text-center">
-    <h4 class="display-4">График потребления заводов</h4>
-    <div class="card">
-        <div class="card-header">
-            <div class="chart1">
-                <canvas id="myChart3"></canvas>
-            </div>
-        </div>
-    </div>
-    <h3><a href="~/Home/Index">Back</a></h3>
-</div>
-
 <script>
-    
-    var Houses = [];    // Дома
-    
+
+var Houses = [];    // Дома
+
     var Weather = [];   // Погода        
 
     var Colors = ['#ff0000', '#660066', '#00b300', '#3333cc'];
 
     var dataset = [];
-       
+
 
     @if (Model.ToList().Count > 0)
     {
@@ -57,15 +44,13 @@
             j++;
         }
     }
-        var arr = (Array.from(new Set(Weather))) // Группируем погоду
-        
+
         fetch('https://localhost:7296/api/weather')
         .then(response => response.json()).then(data => {
         data.forEach(weather => {
-            Weather.push(weather)  
-            //console.log(weather)    
+            Weather.push(weather)     
               })
-        
+
         var Chart2 = document.getElementById('myChart2').getContext('2d');
         var chart = new Chart(Chart2, {
             type: 'line',
@@ -83,29 +68,5 @@
         });
       })
 
-
-              fetch('https://localhost:7296/api/weather')
-        .then(response => response.json()).then(data => {
-        data.forEach(weather => {
-            console.log(weather)    
-              })
-         })
-
-       var Chart3 = document.getElementById('myChart3').getContext('2d');
-        var chart = new Chart(Chart3, {
-            type: 'line',
-            data: {
-               labels: Weather,
-               datasets: dataset               
-            },
-            // Configuration options
-            options: {
-                title: {
-                    display: true,
-                    text: "График потребления заводов"
-                }
-            }
-        });
-              
 </script>
 
