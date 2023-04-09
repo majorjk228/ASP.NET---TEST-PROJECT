@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TEST_TPLUS.Domain.Entities;
-
+using TEST_TPLUS.Service;
 
 namespace TEST_TPLUS.Domains
 {
@@ -22,10 +22,12 @@ namespace TEST_TPLUS.Domains
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            var connectionString = Config.ConnectionString;
+
             optionsBuilder.UseSqlServer
             (
-                "Data Source = TYPAKEK\\SQLEXPRESS;Trusted_Connection=True;Initial Catalog = T_PLUS;User ID = sa;Password = sa;Connect Timeout = 30;Encrypt = False;TrustServerCertificate = False;ApplicationIntent = ReadWrite;MultiSubnetFailover = False"
-            );
+                connectionString
+            ); 
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
