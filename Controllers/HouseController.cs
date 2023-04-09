@@ -13,6 +13,8 @@ using System.Drawing;
 using System.Collections.Generic;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Routing;
+using TEST_TPLUS.Models;
+using System.Diagnostics;
 
 namespace TEST_TPLUS.Controllers
 {
@@ -68,8 +70,7 @@ namespace TEST_TPLUS.Controllers
             else
             {
                 ModelState.AddModelError("jsonFile", "Выберите файл JSON для загрузки");
-                //return Error("Фaйл не выбран");    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });     
-                return View("Index");
+                return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
             }
         }
 
